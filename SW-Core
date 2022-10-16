@@ -1,0 +1,1090 @@
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname sw1-3750g-48ts-Master
+!
+boot-start-marker
+boot-end-marker
+!
+logging monitor warnings
+enable secret 5 $1$ci3D$35X8lQOAYHw95mgH5MGxm1
+enable password 7 122925151E5B0917297B26082164714643
+!
+username admin privilege 15 secret 5 $1$NYJJ$NnW7iGKjPVVWgrwtknMbZ/
+no aaa new-model
+clock timezone UTC 3 30
+switch 1 provision ws-c3750g-48ts
+switch 2 provision ws-c3750g-48ts
+system mtu routing 1500
+ip subnet-zero
+ip routing
+no ip domain-lookup
+ip domain-name tc.com
+no ip dhcp conflict logging
+ip dhcp excluded-address 192.168.101.1 192.168.101.99
+ip dhcp excluded-address 192.168.102.1 192.168.102.99
+ip dhcp excluded-address 192.168.105.1 192.168.105.99
+ip dhcp excluded-address 192.168.104.1 192.168.104.99
+ip dhcp excluded-address 192.168.103.1 192.168.103.99
+ip dhcp excluded-address 192.168.107.1 192.168.107.99
+ip dhcp excluded-address 10.1.11.1 10.1.11.99
+ip dhcp ping packets 0
+!
+ip dhcp pool CLASS-1
+   network 192.168.101.0 255.255.255.0
+   default-router 192.168.101.1
+   dns-server 9.9.9.9 192.168.1.10
+   lease 7
+!
+ip dhcp pool CLASS-2
+   network 192.168.102.0 255.255.255.0
+   default-router 192.168.102.1
+   dns-server 9.9.9.9 192.168.1.10
+   lease 7
+!
+ip dhcp pool CLASS-5
+   network 192.168.105.0 255.255.255.0
+   default-router 192.168.105.1
+   dns-server 9.9.9.9 192.168.1.10
+!
+ip dhcp pool CLASS-4
+   network 192.168.104.0 255.255.255.0
+   default-router 192.168.104.1
+   dns-server 9.9.9.9 192.168.1.10
+!
+ip dhcp pool CLASS-3
+   network 192.168.103.0 255.255.255.0
+   default-router 192.168.103.1
+   dns-server 9.9.9.9 192.168.1.10
+   lease 7
+!
+ip dhcp pool Class-7
+   network 192.168.107.0 255.255.255.0
+   default-router 192.168.107.1
+   dns-server 9.9.9.9 192.168.1.10
+   lease 7
+!
+ip dhcp pool CLASS-7
+   option 150 ip 192.168.107.35
+!
+ip dhcp pool VLAN-1-vWlC
+   network 100.100.100.0 255.255.255.0
+   default-router 100.100.100.1
+   option 43 hex f108.c0a8.25fa.c0a8.26fa
+!
+ip dhcp snooping vlan 101-107
+ip dhcp snooping database flash:
+!
+!
+crypto pki trustpoint TP-self-signed-2560598912
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2560598912
+ revocation-check none
+ rsakeypair TP-self-signed-2560598912
+!
+crypto pki trustpoint HTTPS_SS_CERT_KEYPAIR
+ enrollment selfsigned
+ serial-number
+ revocation-check none
+ rsakeypair HTTPS_SS_CERT_KEYPAIR
+!
+!
+crypto pki certificate chain TP-self-signed-2560598912
+crypto pki certificate chain HTTPS_SS_CERT_KEYPAIR
+ certificate self-signed 01
+  308202BA 30820223 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  64312530 23060355 0403131C 7377312D 33373530 672D3438 74732D4D 61737465
+  722E7463 2E636F6D 313B300E 06035504 05130735 33443641 38303029 06092A86
+  4886F70D 01090216 1C737731 2D333735 30672D34 3874732D 4D617374 65722E74
+  632E636F 6D301E17 0D393330 33313430 37323435 395A170D 32303031 30313030
+  30303030 5A306431 25302306 03550403 131C7377 312D3337 3530672D 34387473
+  2D4D6173 7465722E 74632E63 6F6D313B 300E0603 55040513 07353344 36413830
+  30290609 2A864886 F70D0109 02161C73 77312D33 37353067 2D343874 732D4D61
+  73746572 2E74632E 636F6D30 819F300D 06092A86 4886F70D 01010105 0003818D
+  00308189 02818100 E0A4EFA3 3AE73C9C 5F8CAE50 6F50BD5C 7AC7CCB8 E9EA07AB
+  17697FE0 C687E496 E02E8C99 425E7746 C8B497DC 36B2517B 36B407F8 84AC9658
+  EAD61AF6 38A77C81 69601361 BB3057EF EFC89662 AFE6B09A 0B1B28C1 7CFDF309
+  B4B54B0A 0CBF66D5 75D127FD 9BC368A3 28127B70 33CAF035 CFDF0489 89994283
+  72F29F12 CA9216B5 02030100 01A37C30 7A300F06 03551D13 0101FF04 05300301
+  01FF3027 0603551D 11042030 1E821C73 77312D33 37353067 2D343874 732D4D61
+  73746572 2E74632E 636F6D30 1F060355 1D230418 30168014 4541C35E 2C6288EA
+  8A92175C 60156A68 CB02CA71 301D0603 551D0E04 16041445 41C35E2C 6288EA8A
+  92175C60 156A68CB 02CA7130 0D06092A 864886F7 0D010104 05000381 81001897
+  150E7A6F A9CBBC67 E01970BE 4E594E16 839756FB 0F715409 ABD0EFD5 F0139032
+  4CDA9FA2 B7E979A9 FF9EF397 C6812AA0 1916B95D 33556869 69A143EE 57DD9CC5
+  078BDC25 F868D354 D2BB59DB D5B5023A 9411CA3A 70B6A8E2 DF64FBDE 67EC0363
+  58AB0B6C 72D8344C 720482E0 B6458C4C 59E3B77F 13AF6995 316999B5 E119
+  quit
+!
+!
+!
+port-channel load-balance src-dst-ip
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+no spanning-tree vlan 27,311-321,323-324,326-327,329,331-346,351,400,416,608
+no spanning-tree vlan 609-626,628-633,635-644,646-669,671-673,675-690,701-704
+no spanning-tree vlan 997,1000-1001
+spanning-tree vlan 1-4094 priority 0
+!
+vlan internal allocation policy ascending
+!
+!
+!
+interface Port-channel8
+ description ESX8-S-SW-UPLink
+ switchport access vlan 120
+ switchport mode access
+!
+interface GigabitEthernet1/0/1
+ description Class1-uplink
+ switchport access vlan 101
+ switchport mode access
+ no keepalive
+!
+interface GigabitEthernet1/0/2
+ description Class2-uplink
+ switchport access vlan 102
+!
+interface GigabitEthernet1/0/3
+ description Class3-uplink
+ switchport access vlan 103
+!
+interface GigabitEthernet1/0/4
+ description Class4-uplink
+ switchport access vlan 104
+!
+interface GigabitEthernet1/0/5
+ description Management-VNX-A
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/6
+ description Arjang-vCloud-Laboratory
+ switchport access vlan 120
+ switchport trunk encapsulation dot1q
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/7
+ description Linksys-AccessPoint
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/8
+ description ADSL-Modem_ParsOnline
+ switchport access vlan 120
+ switchport trunk encapsulation dot1q
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/9
+ description Server1_vmnic0_vlan120
+ switchport access vlan 120
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/10
+ description Server1_vmnic1_vlan120
+ switchport access vlan 120
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/11
+ description Server1_vmnic2_trunk_4DVswitch
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast trunk
+!
+interface GigabitEthernet1/0/12
+ description Server1_vmnic3_trunk_4DVswitch
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast trunk
+!
+interface GigabitEthernet1/0/13
+ description Server2_vmnic0_vlan120
+ switchport access vlan 120
+ switchport mode access
+ spanning-tree portfast trunk
+!
+interface GigabitEthernet1/0/14
+ description Server2_vmnic1_vlan120
+ switchport access vlan 120
+ switchport mode access
+ spanning-tree portfast trunk
+!
+interface GigabitEthernet1/0/15
+ description Server2_vmnic2_trunk_4DVswitch
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast trunk
+!
+interface GigabitEthernet1/0/16
+ description Server2_vmnic3_trunk_4DVswitch
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast trunk
+!
+interface GigabitEthernet1/0/17
+ switchport access vlan 120
+ switchport mode access
+!
+interface GigabitEthernet1/0/18
+ description Class7-uplink
+ switchport access vlan 107
+ switchport mode access
+!
+interface GigabitEthernet1/0/19
+ description DVR1-link
+ switchport access vlan 120
+ switchport mode access
+ switchport voice vlan 208
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/20
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/21
+ description VMware-Dedicat-server_accessVlan350
+ no switchport
+ ip address 10.1.13.2 255.255.255.252
+!
+interface GigabitEthernet1/0/22
+ description Arjang-vCloud-Laboratory
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/23
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/24
+ description Management-VNX-B
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/25
+ description Class5
+ switchport access vlan 105
+ switchport mode access
+!
+interface GigabitEthernet1/0/26
+ switchport access vlan 102
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/27
+!
+interface GigabitEthernet1/0/28
+!
+interface GigabitEthernet1/0/29
+!
+interface GigabitEthernet1/0/30
+!
+interface GigabitEthernet1/0/31
+!
+interface GigabitEthernet1/0/32
+!
+interface GigabitEthernet1/0/33
+ description Cisco AP 1832
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/34
+!
+interface GigabitEthernet1/0/35
+!
+interface GigabitEthernet1/0/36
+!
+interface GigabitEthernet1/0/37
+!
+interface GigabitEthernet1/0/38
+!
+interface GigabitEthernet1/0/39
+!
+interface GigabitEthernet1/0/40
+!
+interface GigabitEthernet1/0/41
+!
+interface GigabitEthernet1/0/42
+!
+interface GigabitEthernet1/0/43
+!
+interface GigabitEthernet1/0/44
+!
+interface GigabitEthernet1/0/45
+!
+interface GigabitEthernet1/0/46
+!
+interface GigabitEthernet1/0/47
+!
+interface GigabitEthernet1/0/48
+!
+interface GigabitEthernet1/0/49
+!
+interface GigabitEthernet1/0/50
+!
+interface GigabitEthernet1/0/51
+!
+interface GigabitEthernet1/0/52
+!
+interface GigabitEthernet2/0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet2/0/2
+ switchport access vlan 120
+ switchport mode access
+!
+interface GigabitEthernet2/0/3
+!
+interface GigabitEthernet2/0/4
+!
+interface GigabitEthernet2/0/5
+!
+interface GigabitEthernet2/0/6
+!
+interface GigabitEthernet2/0/7
+!
+interface GigabitEthernet2/0/8
+!
+interface GigabitEthernet2/0/9
+!
+interface GigabitEthernet2/0/10
+!
+interface GigabitEthernet2/0/11
+!
+interface GigabitEthernet2/0/12
+!
+interface GigabitEthernet2/0/13
+!
+interface GigabitEthernet2/0/14
+!
+interface GigabitEthernet2/0/15
+!
+interface GigabitEthernet2/0/16
+!
+interface GigabitEthernet2/0/17
+!
+interface GigabitEthernet2/0/18
+!
+interface GigabitEthernet2/0/19
+!
+interface GigabitEthernet2/0/20
+!
+interface GigabitEthernet2/0/21
+!
+interface GigabitEthernet2/0/22
+!
+interface GigabitEthernet2/0/23
+!
+interface GigabitEthernet2/0/24
+!
+interface GigabitEthernet2/0/25
+!
+interface GigabitEthernet2/0/26
+!
+interface GigabitEthernet2/0/27
+!
+interface GigabitEthernet2/0/28
+!
+interface GigabitEthernet2/0/29
+!
+interface GigabitEthernet2/0/30
+!
+interface GigabitEthernet2/0/31
+!
+interface GigabitEthernet2/0/32
+!
+interface GigabitEthernet2/0/33
+!
+interface GigabitEthernet2/0/34
+!
+interface GigabitEthernet2/0/35
+!
+interface GigabitEthernet2/0/36
+!
+interface GigabitEthernet2/0/37
+!
+interface GigabitEthernet2/0/38
+!
+interface GigabitEthernet2/0/39
+!
+interface GigabitEthernet2/0/40
+!
+interface GigabitEthernet2/0/41
+!
+interface GigabitEthernet2/0/42
+!
+interface GigabitEthernet2/0/43
+!
+interface GigabitEthernet2/0/44
+!
+interface GigabitEthernet2/0/45
+!
+interface GigabitEthernet2/0/46
+!
+interface GigabitEthernet2/0/47
+!
+interface GigabitEthernet2/0/48
+!
+interface GigabitEthernet2/0/49
+!
+interface GigabitEthernet2/0/50
+!
+interface GigabitEthernet2/0/51
+!
+interface GigabitEthernet2/0/52
+!
+interface Vlan1
+ ip address 100.100.100.1 255.255.255.0
+!
+interface Vlan9
+ ip address 10.1.9.1 255.255.255.0
+!
+interface Vlan10
+ description Class-NET
+ ip address 192.168.10.1 255.255.255.0
+!
+interface Vlan13
+ ip address 172.13.1.1 255.255.0.0
+!
+interface Vlan14
+ ip address 172.14.1.1 255.255.0.0
+!
+interface Vlan15
+ ip address 172.15.1.1 255.255.0.0
+!
+interface Vlan16
+ ip address 192.168.15.1 255.255.255.0
+!
+interface Vlan17
+ no ip address
+!
+interface Vlan18
+ ip address 172.18.1.1 255.255.0.0
+!
+interface Vlan19
+ ip address 172.19.1.1 255.255.0.0
+!
+interface Vlan20
+ ip address 172.20.1.1 255.255.0.0
+!
+interface Vlan25
+ no ip address
+!
+interface Vlan28
+ ip address 10.10.28.1 255.255.255.0
+!
+interface Vlan31
+ ip address 192.168.31.1 255.255.255.0
+!
+interface Vlan32
+ ip address 192.168.32.1 255.255.255.0
+!
+interface Vlan33
+ ip address 192.168.33.1 255.255.255.0
+!
+interface Vlan34
+ ip address 192.168.34.1 255.255.255.0
+!
+interface Vlan35
+ ip address 192.168.35.1 255.255.255.0
+!
+interface Vlan36
+ ip address 192.168.36.1 255.255.255.0
+!
+interface Vlan37
+ ip address 192.168.37.1 255.255.255.0
+!
+interface Vlan38
+ ip address 192.168.38.1 255.255.255.0
+!
+interface Vlan39
+ ip address 192.168.39.1 255.255.255.0
+!
+interface Vlan40
+ ip address 192.168.40.1 255.255.255.0
+!
+interface Vlan41
+ ip address 192.168.41.1 255.255.255.0
+!
+interface Vlan42
+ ip address 172.11.1.1 255.255.0.0
+!
+interface Vlan43
+ ip address 192.168.43.1 255.255.255.0
+!
+interface Vlan44
+ ip address 192.168.44.1 255.255.255.0
+!
+interface Vlan45
+ ip address 192.168.45.1 255.255.255.0
+!
+interface Vlan46
+ ip address 192.168.46.1 255.255.255.0
+!
+interface Vlan47
+ ip address 192.168.47.1 255.255.255.0
+!
+interface Vlan48
+ ip address 192.168.48.1 255.255.255.0
+!
+interface Vlan50
+ ip address 172.16.20.254 255.255.0.0
+!
+interface Vlan51
+ ip address 192.168.51.1 255.255.255.0
+!
+interface Vlan52
+ ip address 192.168.52.1 255.255.255.0
+!
+interface Vlan53
+ ip address 192.168.53.1 255.255.255.0
+!
+interface Vlan54
+ ip address 192.168.54.1 255.255.255.0
+!
+interface Vlan55
+ ip address 192.168.55.1 255.255.255.0
+!
+interface Vlan56
+ ip address 192.168.56.1 255.255.255.0
+!
+interface Vlan57
+ ip address 192.168.57.1 255.255.255.0
+!
+interface Vlan58
+ ip address 192.168.58.1 255.255.255.0
+!
+interface Vlan59
+ ip address 192.168.59.1 255.255.255.0
+!
+interface Vlan60
+ ip address 192.168.60.1 255.255.255.0
+!
+interface Vlan61
+ ip address 192.168.61.1 255.255.255.0
+!
+interface Vlan62
+ ip address 192.168.62.1 255.255.255.0
+!
+interface Vlan63
+ ip address 192.168.63.1 255.255.255.0
+!
+interface Vlan64
+ ip address 192.168.64.1 255.255.255.0
+!
+interface Vlan65
+ ip address 192.168.65.1 255.255.255.0
+!
+interface Vlan66
+ ip address 192.168.66.1 255.255.255.0
+!
+interface Vlan67
+ ip address 192.168.67.1 255.255.255.0
+!
+interface Vlan68
+ ip address 192.168.68.1 255.255.255.0
+!
+interface Vlan69
+ ip address 192.168.69.1 255.255.255.0
+!
+interface Vlan81
+ ip address 192.168.81.1 255.255.255.0
+!
+interface Vlan82
+ ip address 192.168.82.1 255.255.255.0
+!
+interface Vlan83
+ ip address 192.168.83.1 255.255.255.0
+!
+interface Vlan84
+ ip address 192.168.84.1 255.255.255.0
+!
+interface Vlan85
+ ip address 192.168.85.1 255.255.255.0
+!
+interface Vlan86
+ ip address 192.168.86.1 255.255.255.0
+!
+interface Vlan87
+ ip address 192.168.87.1 255.255.255.0
+!
+interface Vlan88
+ ip address 192.168.88.1 255.255.255.0
+!
+interface Vlan90
+ description vCloud-Laboratory
+ ip address 192.168.9.1 255.255.255.0
+!
+interface Vlan91
+ ip address 192.168.91.1 255.255.255.0
+!
+interface Vlan92
+ ip address 192.168.92.1 255.255.255.0
+!
+interface Vlan93
+ ip address 192.168.93.1 255.255.255.0
+!
+interface Vlan94
+ ip address 192.168.94.1 255.255.255.0
+!
+interface Vlan95
+ ip address 192.168.95.1 255.255.255.0
+!
+interface Vlan96
+ ip address 192.168.96.1 255.255.255.0
+!
+interface Vlan97
+ ip address 192.168.97.1 255.255.255.0
+!
+interface Vlan98
+ ip address 192.168.98.1 255.255.255.0
+!
+interface Vlan99
+ ip address 192.168.99.1 255.255.255.0
+!
+interface Vlan100
+ ip address 192.168.100.1 255.255.255.0
+ ip helper-address 192.168.1.101
+ ip helper-address 192.168.1.45
+ ip helper-address 192.168.100.20
+ ip helper-address 10.1.8.1
+!
+interface Vlan101
+ ip address 192.168.101.1 255.255.255.0
+ ip helper-address 192.168.101.20
+!
+interface Vlan102
+ ip address 192.168.102.1 255.255.255.0
+ ip helper-address 192.168.102.1
+!
+interface Vlan103
+ ip address 192.168.103.1 255.255.255.0
+ ip helper-address 192.168.103.20
+!
+interface Vlan104
+ ip address 192.168.104.1 255.255.255.0
+ ip helper-address 192.168.104.20
+!
+interface Vlan105
+ ip address 192.168.105.1 255.255.255.0
+!
+interface Vlan107
+ ip address 192.168.107.1 255.255.255.0
+!
+interface Vlan111
+ description ParsOnline
+ no ip address
+!
+interface Vlan120
+ ip address 192.168.1.1 255.255.255.0
+!
+interface Vlan122
+ ip address 192.168.2.1 255.255.255.0
+!
+interface Vlan201
+ description VOICE VLAN Class 2
+ ip address 10.1.11.1 255.255.255.0
+ ip helper-address 10.1.11.1
+!
+interface Vlan205
+ ip address 10.1.15.254 255.255.255.0
+!
+interface Vlan206
+ ip address 10.1.16.254 255.255.255.0
+!
+interface Vlan211
+ description VM-Lab1
+ ip address 192.168.201.250 255.255.255.0
+!
+interface Vlan220
+ ip address 192.168.220.1 255.255.255.0
+!
+interface Vlan221
+ ip address 192.168.50.1 255.255.255.0
+!
+interface Vlan222
+ no ip address
+!
+interface Vlan223
+ description VM-lab
+ ip address 100.100.201.250 255.255.255.0 secondary
+ ip address 172.17.1.1 255.255.0.0
+ no ip proxy-arp
+!
+interface Vlan234
+ description VM-Lab-4
+ ip address 172.24.1.1 255.255.0.0
+!
+interface Vlan301
+ no ip address
+!
+interface Vlan302
+ no ip address
+!
+interface Vlan303
+ no ip address
+!
+interface Vlan304
+ no ip address
+!
+interface Vlan305
+ no ip address
+!
+interface Vlan306
+ no ip address
+!
+interface Vlan310
+ ip address 192.168.71.1 255.255.255.0
+!
+interface Vlan416
+ no ip address
+!
+interface Vlan421
+ ip address 172.21.1.1 255.255.0.0
+!
+interface Vlan422
+ ip address 172.22.1.1 255.255.0.0
+!
+interface Vlan423
+ ip address 172.23.1.1 255.255.0.0
+!
+interface Vlan425
+ ip address 172.25.1.1 255.255.0.0
+!
+interface Vlan500
+ description Arjang VLabs
+ ip address 172.12.1.1 255.255.0.0
+!
+interface Vlan601
+ ip address 10.10.1.1 255.255.255.0
+!
+interface Vlan602
+ ip address 10.10.2.1 255.255.255.0
+!
+interface Vlan603
+ ip address 10.10.3.1 255.255.255.0
+!
+interface Vlan604
+ ip address 10.10.4.1 255.255.255.0
+!
+interface Vlan605
+ ip address 10.10.5.1 255.255.255.0
+!
+interface Vlan606
+ ip address 10.10.6.1 255.255.255.0
+!
+interface Vlan607
+ ip address 10.10.7.1 255.255.255.0
+!
+interface Vlan608
+ ip address 10.10.8.1 255.255.255.0
+!
+interface Vlan609
+ ip address 10.10.9.1 255.255.255.0
+!
+interface Vlan610
+ ip address 10.10.10.1 255.255.255.0
+!
+interface Vlan611
+ ip address 10.10.11.1 255.255.255.0
+!
+interface Vlan612
+ ip address 10.10.12.1 255.255.255.0
+!
+interface Vlan613
+ ip address 10.10.13.1 255.255.255.0
+!
+interface Vlan614
+ ip address 10.10.14.1 255.255.255.0
+!
+interface Vlan615
+ ip address 10.10.15.1 255.255.255.0
+!
+interface Vlan616
+ ip address 10.10.16.1 255.255.255.0
+!
+interface Vlan617
+ ip address 10.10.17.1 255.255.255.0
+!
+interface Vlan618
+ ip address 10.10.18.1 255.255.255.0
+!
+interface Vlan619
+ ip address 10.10.19.1 255.255.255.0
+!
+interface Vlan620
+ ip address 10.10.20.1 255.255.255.0
+!
+interface Vlan621
+ ip address 10.10.21.1 255.255.255.0
+!
+interface Vlan622
+ ip address 10.10.22.1 255.255.255.0
+!
+interface Vlan623
+ ip address 10.10.23.1 255.255.255.0
+!
+interface Vlan624
+ ip address 10.10.24.1 255.255.255.0
+!
+interface Vlan625
+ ip address 10.10.25.1 255.255.255.0
+!
+interface Vlan626
+ ip address 10.10.26.1 255.255.255.0
+!
+interface Vlan627
+ ip address 10.10.27.1 255.255.255.0
+!
+interface Vlan629
+ ip address 10.10.29.1 255.255.255.0
+!
+interface Vlan630
+ ip address 10.10.30.1 255.255.255.0
+!
+interface Vlan631
+ ip address 10.10.31.1 255.255.255.0
+!
+interface Vlan632
+ ip address 10.10.32.1 255.255.255.0
+!
+interface Vlan633
+ ip address 10.10.33.1 255.255.255.0
+!
+interface Vlan634
+ ip address 10.10.34.1 255.255.255.0
+!
+interface Vlan635
+ ip address 10.10.35.1 255.255.255.0
+!
+interface Vlan636
+ ip address 10.10.36.1 255.255.255.0
+!
+interface Vlan637
+ ip address 10.10.37.1 255.255.255.0
+!
+interface Vlan638
+ ip address 10.10.38.1 255.255.255.0
+!
+interface Vlan639
+ ip address 10.10.39.1 255.255.255.0
+!
+interface Vlan640
+ ip address 10.10.40.1 255.255.255.0
+!
+interface Vlan641
+ ip address 10.10.41.1 255.255.255.0
+!
+interface Vlan642
+ ip address 10.10.42.1 255.255.255.0
+!
+interface Vlan643
+ ip address 10.10.43.1 255.255.255.0
+!
+interface Vlan644
+ ip address 10.10.44.1 255.255.255.0
+!
+interface Vlan645
+ ip address 10.10.45.1 255.255.255.0
+!
+interface Vlan646
+ ip address 10.10.46.1 255.255.255.0
+!
+interface Vlan647
+ ip address 10.10.47.1 255.255.255.0
+!
+interface Vlan648
+ ip address 10.10.48.1 255.255.255.0
+!
+interface Vlan649
+ ip address 10.10.49.1 255.255.255.0
+!
+interface Vlan650
+ ip address 10.10.50.1 255.255.255.0
+!
+interface Vlan651
+ ip address 10.10.51.1 255.255.255.0
+!
+interface Vlan652
+ ip address 10.10.52.1 255.255.255.0
+!
+interface Vlan653
+ ip address 10.10.53.1 255.255.255.0
+!
+interface Vlan654
+ ip address 10.10.54.1 255.255.255.0
+!
+interface Vlan655
+ ip address 10.10.55.1 255.255.255.0
+!
+interface Vlan656
+ ip address 10.10.56.1 255.255.255.0
+!
+interface Vlan657
+ ip address 10.10.57.1 255.255.255.0
+!
+interface Vlan658
+ ip address 10.10.58.1 255.255.255.0
+!
+interface Vlan659
+ ip address 10.10.59.1 255.255.255.0
+!
+interface Vlan660
+ ip address 10.10.60.1 255.255.255.0
+!
+interface Vlan661
+ ip address 10.10.61.1 255.255.255.0
+!
+interface Vlan662
+ ip address 10.10.62.1 255.255.255.0
+!
+interface Vlan663
+ ip address 10.10.63.1 255.255.255.0
+!
+interface Vlan664
+ ip address 10.10.64.1 255.255.255.0
+!
+interface Vlan665
+ ip address 10.10.65.1 255.255.255.0
+!
+interface Vlan666
+ ip address 10.10.66.1 255.255.255.0
+!
+interface Vlan667
+ ip address 10.10.67.1 255.255.255.0
+!
+interface Vlan668
+ ip address 10.10.68.1 255.255.255.0
+!
+interface Vlan669
+ ip address 10.10.69.1 255.255.255.0
+!
+interface Vlan670
+ ip address 10.10.70.1 255.255.255.0
+!
+interface Vlan671
+ ip address 10.10.71.1 255.255.255.0
+!
+interface Vlan672
+ ip address 10.10.72.1 255.255.255.0
+!
+interface Vlan673
+ ip address 10.10.73.1 255.255.255.0
+!
+interface Vlan674
+ ip address 10.10.74.1 255.255.255.0
+!
+interface Vlan675
+ ip address 10.10.75.1 255.255.255.0
+!
+interface Vlan676
+ ip address 10.10.76.1 255.255.255.0
+!
+interface Vlan677
+ ip address 10.10.77.1 255.255.255.0
+!
+interface Vlan678
+ ip address 10.10.78.1 255.255.255.0
+!
+interface Vlan679
+ ip address 10.10.79.1 255.255.255.0
+!
+interface Vlan680
+ ip address 10.10.80.1 255.255.255.0
+!
+interface Vlan681
+ ip address 10.10.81.1 255.255.255.0
+!
+interface Vlan682
+ ip address 10.10.82.1 255.255.255.0
+!
+interface Vlan683
+ ip address 10.10.83.1 255.255.255.0
+!
+interface Vlan684
+ ip address 10.10.84.1 255.255.255.0
+!
+interface Vlan685
+ ip address 10.10.85.1 255.255.255.0
+!
+interface Vlan686
+ ip address 10.10.86.1 255.255.255.0
+!
+interface Vlan687
+ ip address 10.10.87.1 255.255.255.0
+!
+interface Vlan998
+ description Juniper SW
+ no ip address
+!
+interface Vlan999
+ ip address 192.168.110.1 255.255.255.0
+!
+interface Vlan1020
+ no ip address
+!
+ip default-gateway 192.168.1.4
+ip classless
+ip forward-protocol udp 5405
+ip forward-protocol udp bootps
+ip forward-protocol udp 4011
+ip forward-protocol udp bootpc
+ip forward-protocol udp 7725
+ip forward-protocol udp 1434
+ip forward-protocol udp 5060
+ip forward-protocol udp 5061
+ip forward-protocol udp 5062
+ip forward-protocol udp 8057
+ip forward-protocol udp 8058
+ip forward-protocol udp 5063
+ip forward-protocol udp 60
+ip route 0.0.0.0 0.0.0.0 10.1.13.1
+ip route 192.168.4.0 255.255.255.0 10.1.13.1
+ip route 192.168.30.0 255.255.255.0 192.168.105.10 name Hamed
+ip http server
+ip http secure-server
+!
+ip access-list extended TELNET
+ permit tcp any eq telnet any
+ permit tcp any any eq telnet
+!
+snmp-server community Smartstart123! RO
+snmp-server community arjangacir RO
+snmp-server enable traps vtp
+snmp-server enable traps vlancreate
+snmp-server enable traps config
+snmp-server host 192.168.1.66 Smartstart123!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+ login local
+line vty 0 4
+ exec-timeout 30 0
+ password 7 107E291B094717180F54280B3679606066
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ exec-timeout 30 0
+ password 7 107E291B094717180F54280B3679606066
+ login local
+ transport input ssh
+!
+end
