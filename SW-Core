@@ -1067,7 +1067,7 @@ snmp-server community arjangacir RO
 snmp-server enable traps vtp
 snmp-server enable traps vlancreate
 snmp-server enable traps config
-snmp-server host 192.168.1.66 Smartstart123!
+snmp-server host 192.168.1.67 Smartstart123!
 !
 control-plane
 !
